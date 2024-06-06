@@ -1,5 +1,4 @@
 'use server'
-/* eslint-disable */
 import { auth } from '@/auth'
 import { kv } from '@vercel/kv'
 import pptxgen from 'pptxgenjs'
@@ -10,7 +9,10 @@ import { promisify } from 'util'
 
 const mkdir = promisify(fs.mkdir)
 const writeFile = promisify(fs.writeFile)
-
+interface IPPTData {
+  data: string
+  chatId: string
+}
 export async function addSlideData(data: string, chatId: string) {
   const session = await auth()
 
@@ -54,15 +56,17 @@ export async function generatePPT(id: string): Promise<string> {
   }
 
   // Fetch all PPT data
-  const pptDataPromises = pptIds.map((pptId: string) => kv.hgetall(pptId))
-  const pptDataArray = await Promise.all(pptDataPromises)
+  const pptDataPromises: Promise<IPPTData>[] = pptIds.map((pptId: string) =>
+    kv.hgetall(pptId)
+  )
+  const pptDataArray: IPPTData[] = await Promise.all(pptDataPromises)
 
   // Create a new presentation
   const pres = new pptxgen()
 
   pptDataArray
-    .filter((pptData: { data: string; chatId: string }) => pptData.chatId == id)
-    .forEach((pptData: { data: string; chatId: string }) => {
+    .filter((pptData: IPPTData) => pptData.chatId == id)
+    .forEach((pptData: IPPTData) => {
       const slide = pres.addSlide()
       slide.addText(pptData.data, {
         x: 1.5,
