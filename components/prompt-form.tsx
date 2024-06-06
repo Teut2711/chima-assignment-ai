@@ -72,7 +72,12 @@ export function PromptForm({
 
         // Submit and get response message
         const responseMessage = await submitUserMessage(value)
-        await addSlideData(responseMessage.display, id)
+        if (responseMessage !== undefined && responseMessage !== null) {
+          await addSlideData(
+            responseMessage.display as string,
+            id as unknown as string
+          )
+        }
 
         setMessages(currentMessages => [...currentMessages, responseMessage])
       }}
