@@ -15,9 +15,8 @@ import {
 //   project: 'proj_K96VLX2vlHtfeyb8QW7ghZyN'
 // })
 import { GoogleGenerativeAI } from '@google/generative-ai'
-
+console.log('Key:::::', process.env.GEMINI_KEY, '-...-', process.env.VERCEL)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY || '')
-
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
 import {
