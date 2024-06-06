@@ -4,8 +4,7 @@ import { kv } from '@vercel/kv'
 import pptxgen from 'pptxgenjs'
 
 import path from 'path'
-import fs from 'fs'
-
+import { promises as fs } from 'fs'
 interface IPPTData {
   data: string
   chatId: string
@@ -75,10 +74,10 @@ export async function generatePPT(id: string): Promise<string> {
     })
 
   const fileName = `${userId}-${id}-presentation.pptx`
-  const filePath = path.join('downloads', fileName)
+  const filePath = path.join(process.cwd(), 'downloads', fileName)
 
   // Ensure the directory exists
-  await fs.promises.mkdir('downloads', { recursive: true, mode: 0o777 })
+  await fs.mkdir(process.cwd() + '/downloads', { recursive: true, mode: 0o777 })
 
   // Save the presentation
   await pres.writeFile(filePath)
