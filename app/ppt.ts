@@ -49,7 +49,7 @@ export async function generatePPT(id: string): Promise<string> {
   }
 
   const userId = session.user.id
-  const pptIds = await kv.zrange(`user:ppt:${userId}`, 0, -1)
+  const pptIds: string[] = await kv.zrange(`user:ppt:${userId}`, 0, -1)
 
   if (pptIds.length === 0) {
     throw new Error('No slides found for the user.')
