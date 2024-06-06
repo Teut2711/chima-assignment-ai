@@ -1,5 +1,5 @@
 'use server'
-
+/* eslint-disable */
 import { auth } from '@/auth'
 import { kv } from '@vercel/kv'
 import pptxgen from 'pptxgenjs'
@@ -12,7 +12,6 @@ const mkdir = promisify(fs.mkdir)
 const writeFile = promisify(fs.writeFile)
 
 export async function addSlideData(data: string, chatId: string) {
-  console.log(chatId)
   const session = await auth()
 
   if (session && session.user) {
@@ -57,7 +56,6 @@ export async function generatePPT(id: string): Promise<string> {
   // Fetch all PPT data
   const pptDataPromises = pptIds.map((pptId: string) => kv.hgetall(pptId))
   const pptDataArray = await Promise.all(pptDataPromises)
-  console.log(pptDataArray)
 
   // Create a new presentation
   const pres = new pptxgen()
