@@ -5,10 +5,7 @@ import pptxgen from 'pptxgenjs'
 
 import path from 'path'
 import fs from 'fs'
-import { promisify } from 'util'
 
-const mkdir = promisify(fs.mkdir)
-const writeFile = promisify(fs.writeFile)
 interface IPPTData {
   data: string
   chatId: string
@@ -82,7 +79,7 @@ export async function generatePPT(id: string): Promise<string> {
   console.log(filePath, __filename, __dirname)
 
   // Ensure the directory exists
-  await fs.mkdir(path.dirname(filePath), { recursive: true })
+  await fs.promises.mkdir(path.dirname(filePath), { recursive: true })
 
   // Save the presentation
   await pres.writeFile(filePath)
