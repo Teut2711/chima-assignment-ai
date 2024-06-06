@@ -86,5 +86,5 @@ export async function generatePPT(id: string): Promise<string> {
   await pres.writeFile(filePath)
 
   // Return the download path
-  return `/${fileName}`
+  return `/${tempDir}/${fileName}`
 }
