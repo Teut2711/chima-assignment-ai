@@ -33,7 +33,7 @@ export function PromptForm({
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { submitUserMessage } = useActions()
   const [_, setMessages] = useUIState<typeof AI>()
-
+  console.log('HIII::', process.env.GEMINI_KEY)
   React.useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
