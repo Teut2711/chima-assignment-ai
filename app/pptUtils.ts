@@ -5,6 +5,7 @@ import pptxgen from 'pptxgenjs'
 import { tmpdir } from 'os'
 import path from 'path'
 import { promises as fs } from 'fs'
+import { randomUUID } from 'crypto'
 interface IPPTData {
   data: string
   chatId: string
@@ -22,7 +23,7 @@ export async function addSlideData(data: string, chatId: string) {
     // Associate the PPT with the user in a sorted set
     pipeline.zadd(`user:ppt:${userId}`, {
       score: Date.now(),
-      member: `ppt:${chatId}`
+      member: `ppt:${chatId}:${randomUUID()}`
     })
 
     try {
