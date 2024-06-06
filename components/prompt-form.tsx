@@ -40,8 +40,10 @@ export function PromptForm({
     }
   }, [])
   const handlePPTDownload = async () => {
-    const pptLink = await generatePPT(id)
-    window.open(pptLink, '_blank')
+    if (id !== null) {
+      const pptLink = await generatePPT(id as unknown as string)
+      window.open(pptLink, '_blank')
+    }
   }
 
   return (
