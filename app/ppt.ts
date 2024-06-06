@@ -7,6 +7,8 @@ import path from 'path'
 import fs from 'fs'
 import { promisify } from 'util'
 
+const mkdir = promisify(fs.mkdir)
+const writeFile = promisify(fs.writeFile)
 interface IPPTData {
   data: string
   chatId: string
@@ -76,11 +78,8 @@ export async function generatePPT(id: string): Promise<string> {
     })
 
   // Define file path
-  const fileName = `${id}-presentation.pptx`
-  const filePath = path.join('downloads', fileName)
-
-  // // Ensure the directory exists
-  // await mkdir(path.dirname(filePath), { recursive: true })
+  const fileName = `${userId}-${id}-presentation.pptx`
+  const filePath = path.join('./', 'downloads', fileName)
 
   // Save the presentation
   await pres.writeFile({ fileName: filePath })
