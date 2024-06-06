@@ -56,14 +56,14 @@ export async function generatePPT(id: string): Promise<string> {
   }
 
   // Fetch all PPT data
-  const pptDataPromises: Promise<IPPTData>[] = pptIds.map((pptId: string) =>
-    kv.hgetall(pptId)
+  const pptDataPromises: Promise<Record<string, unknown> | null>[] = pptIds.map(
+    (pptId: string) => kv.hgetall(pptId)
   )
-  const pptDataArray: IPPTData[] = await Promise.all(pptDataPromises)
-
+  const pptDataArray = (await Promise.all(
+    pptDataPromises
+  )) as unknown as IPPTData[]
   // Create a new presentation
   const pres = new pptxgen()
-
   pptDataArray
     .filter((pptData: IPPTData) => pptData.chatId == id)
     .forEach((pptData: IPPTData) => {
