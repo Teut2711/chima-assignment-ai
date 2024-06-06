@@ -4,6 +4,8 @@ import { Session } from '@/lib/types'
 import Link from 'next/link'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
+// 1. Create a Presentation
+
 export interface ChatList {
   messages: UIState
   session?: Session
@@ -44,6 +46,7 @@ export function ChatList({ messages, session, isShared }: ChatList) {
       {messages.map((message, index) => (
         <div key={message.id}>
           {message.display}
+
           {index < messages.length - 1 && <Separator className="my-4" />}
         </div>
       ))}

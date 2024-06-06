@@ -1,5 +1,5 @@
 import * as React from 'react'
-
+import { useState } from 'react'
 import { shareChat } from '@/app/actions'
 import { Button } from '@/components/ui/button'
 import { PromptForm } from '@/components/prompt-form'
@@ -11,6 +11,7 @@ import { useAIState, useActions, useUIState } from 'ai/rsc'
 import type { AI } from '@/lib/chat/actions'
 import { nanoid } from 'nanoid'
 import { UserMessage } from './stocks/message'
+import { addSlideData, generatePPT } from '@/app/ppt'
 
 export interface ChatPanelProps {
   id?: string
@@ -36,9 +37,9 @@ export function ChatPanel({
 
   const exampleMessages = [
     {
-      heading: 'What are the',
-      subheading: 'trending memecoins today?',
-      message: `What are the trending memecoins today?`
+      heading: 'What should',
+      subheading: 'I cook today?',
+      message: `What should I cook today`
     },
     {
       heading: 'What is the price of',
@@ -130,7 +131,7 @@ export function ChatPanel({
         ) : null}
 
         <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
-          <PromptForm input={input} setInput={setInput} />
+          <PromptForm input={input} setInput={setInput} id={id} />
           <FooterText className="hidden sm:block" />
         </div>
       </div>

@@ -17,8 +17,10 @@ import {
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
+import { addSlideData, generatePPT } from '@/app/ppt'
 
 export function PromptForm({
+  id,
   input,
   setInput
 }: {
@@ -36,6 +38,10 @@ export function PromptForm({
       inputRef.current.focus()
     }
   }, [])
+  const handlePPTDownload = async () => {
+    const pptLink = await generatePPT(id)
+    window.open(pptLink, '_blank')
+  }
 
   return (
     <form
@@ -63,6 +69,8 @@ export function PromptForm({
 
         // Submit and get response message
         const responseMessage = await submitUserMessage(value)
+        await addSlideData(responseMessage.display, id)
+
         setMessages(currentMessages => [...currentMessages, responseMessage])
       }}
     >
@@ -98,6 +106,8 @@ export function PromptForm({
           value={input}
           onChange={e => setInput(e.target.value)}
         />
+        <Button onClick={handlePPTDownload}>Download PPT</Button>
+
         <div className="absolute right-0 top-[13px] sm:right-4">
           <Tooltip>
             <TooltipTrigger asChild>
