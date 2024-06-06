@@ -2,7 +2,7 @@
 import { auth } from '@/auth'
 import { kv } from '@vercel/kv'
 import pptxgen from 'pptxgenjs'
-
+import { tmpdir } from 'os'
 import path from 'path'
 import { promises as fs } from 'fs'
 interface IPPTData {
@@ -72,12 +72,15 @@ export async function generatePPT(id: string): Promise<string> {
         align: pres.AlignH.center
       })
     })
+  const tempDir = tmpdir()
+  // Create the path for the 'downloads' directory within the temp directory
+  const downloadsPath = path.join(tempDir, 'downloads')
 
   const fileName = `${userId}-${id}-presentation.pptx`
-  const filePath = path.join(process.cwd(), fileName)
+  const filePath = path.join(downloadsPath, fileName)
 
   // // Ensure the directory exists
-  // await fs.mkdir(process.cwd() + '/downloads', { recursive: true, mode: 0o777 })
+  await fs.mkdir(downloadsPath, { recursive: true, mode: 0o777 })
 
   // Save the presentation
   await pres.writeFile(filePath)
