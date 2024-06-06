@@ -24,7 +24,7 @@ export function PromptForm({
   input,
   setInput
 }: {
-  id: string
+  id?: string
   input: string
   setInput: (value: string) => void
 }) {
