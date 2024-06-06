@@ -79,7 +79,10 @@ export async function generatePPT(id: string): Promise<string> {
 
   // Define file path
   const fileName = `${userId}-${id}-presentation.pptx`
-  const filePath = path.join('./', 'downloads', fileName)
+  const filePath = path.join(__dirname, '..', 'downloads', fileName)
+  console.log(filePath, __filename, __dirname)
+  // Ensure the directory exists
+  await mkdir(path.dirname(filePath), { recursive: true })
 
   // Save the presentation
   await pres.writeFile({ fileName: filePath })
