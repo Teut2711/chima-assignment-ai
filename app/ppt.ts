@@ -55,7 +55,7 @@ export async function generatePPT(id: string): Promise<string> {
   }
 
   // Fetch all PPT data
-  const pptDataPromises = pptIds.map(pptId => kv.hgetall(pptId))
+  const pptDataPromises = pptIds.map((pptId: string) => kv.hgetall(pptId))
   const pptDataArray = await Promise.all(pptDataPromises)
   console.log(pptDataArray)
 
@@ -63,8 +63,8 @@ export async function generatePPT(id: string): Promise<string> {
   const pres = new pptxgen()
 
   pptDataArray
-    .filter(pptData => pptData.chatId == id)
-    .forEach(pptData => {
+    .filter((pptData: { data: string; chatId: string }) => pptData.chatId == id)
+    .forEach((pptData: { data: string; chatId: string }) => {
       const slide = pres.addSlide()
       slide.addText(pptData.data, {
         x: 1.5,
