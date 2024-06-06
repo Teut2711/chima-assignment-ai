@@ -8,7 +8,7 @@ import { useActions, useUIState } from 'ai/rsc'
 import { UserMessage } from './stocks/message'
 import { type AI } from '@/lib/chat/actions'
 import { Button } from '@/components/ui/button'
-import { IconArrowElbow, IconPlus } from '@/components/ui/icons'
+import { IconArrowElbow, IconPlus, IconSpinner } from '@/components/ui/icons'
 import {
   Tooltip,
   TooltipContent,
@@ -17,7 +17,16 @@ import {
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
-import { addSlideData, generatePPT } from '@/app/ppt'
+import { addSlideData, generatePPT } from '@/app/pptUtils'
+import { useState } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from './ui/alert-dialog'
 
 export function PromptForm({
   id,
@@ -33,18 +42,21 @@ export function PromptForm({
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { submitUserMessage } = useActions()
   const [_, setMessages] = useUIState<typeof AI>()
+  const [ppt, setPpt] = useState()
   React.useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
     }
   }, [])
+  const [open, setOpen] = useState(false)
   const handlePPTDownload = async () => {
     if (id !== null) {
-      const pptLink = await generatePPT(id as unknown as string)
-      window.open(pptLink, '_blank')
+      const pptData = await generatePPT(id as unknown as string)
+      setPpt(pptData)
+      setOpen(true)
+      // router.push(`/ppt/${id}?pptData=${pptData}`)
     }
   }
-
   return (
     <form
       ref={formRef}
@@ -81,6 +93,13 @@ export function PromptForm({
         setMessages(currentMessages => [...currentMessages, responseMessage])
       }}
     >
+      {ppt && (
+        <iframe
+          src={`data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,${ppt}`}
+          width="0"
+          height="0"
+        ></iframe>
+      )}
       <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -114,7 +133,6 @@ export function PromptForm({
           onChange={e => setInput(e.target.value)}
         />
         <Button onClick={handlePPTDownload}>Download PPT</Button>
-
         <div className="absolute right-0 top-[13px] sm:right-4">
           <Tooltip>
             <TooltipTrigger asChild>

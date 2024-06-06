@@ -72,20 +72,9 @@ export async function generatePPT(id: string): Promise<string> {
         align: pres.AlignH.center
       })
     })
-  const tempDir = tmpdir()
-  // Create the path for the 'downloads' directory within the temp directory
-  const downloadsPath = path.join(tempDir, 'downloads')
 
-  const fileName = `${userId}-${id}-presentation.pptx`
-  const filePath = path.join(downloadsPath, fileName)
-  console.log(filePath, `/${tempDir}/${fileName}`)
+  const buffer = await pres.stream() // Get the presentation as a buffer
 
-  // // Ensure the directory exists
-  await fs.mkdir(downloadsPath, { recursive: true, mode: 0o777 })
-
-  // Save the presentation
-  await pres.writeFile(filePath)
-
-  // Return the download path
-  return `/${downloadsPath}/${fileName}`
+  const base64String = buffer.toString('base64')
+  return base64String
 }
